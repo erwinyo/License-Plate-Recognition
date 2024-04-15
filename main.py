@@ -10,8 +10,8 @@ load_dotenv()  # Load environment variable
 
 
 if __name__ == '__main__':
-    yolo_car = YoloDetector("asset/model/yolo/yolov8l.pt")
-    yolo_lpr = YoloDetector("asset/model/lpr/lpr_fast.pt")
+    yolo_car = YoloDetector("asset/model/yolo/yolov8l.onnx")
+    yolo_lpr = YoloDetector("asset/model/lpr/lpr_fast.onnx")
     ocr = OCR()
 
     cap = cv2.VideoCapture("asset/video/sample.mp4")

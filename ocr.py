@@ -2,6 +2,13 @@ import string
 
 import cv2
 import easyocr
+import numpy as np
+import torch
+
+import RRDBNet_arch as arch
+
+# Device agnostic
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Mapping dictionaries for character conversion
 dict_char_to_int = {'O': '0',
@@ -20,11 +27,28 @@ dict_int_to_char = {'0': 'O',
 
 
 class OCR:
+    super_resolution_model = "asset/model/super_resolution/RRDB_ESRGAN_x4.pth"
+
     def __init__(self):
         self.reader = easyocr.Reader(['en'], gpu=True)
 
-    @staticmethod
-    def preprocess(image):
+        self.ss = arch.RRDBNet(3, 3, 64, 23, gc=32)
+        self.ss.load_state_dict(torch.load(self.super_resolution_model), strict=True)
+        self.ss.eval()
+        self.ss = self.ss.to(device)
+
+    def preprocess(self, image):
+        # Super resolution
+        # image = image * 1.0 / 255
+        # image = torch.from_numpy(np.transpose(image[:, :, [2, 1, 0]], (2, 0, 1))).float()
+        # image = image.unsqueeze(0)
+        # image = image.to(device)
+        # with torch.no_grad():
+        #     output = self.ss(image).data.squeeze().float().cpu().clamp_(0, 1).numpy()
+        # output = np.transpose(output[[2, 1, 0], :, :], (1, 2, 0))
+        # image = (output * 255.0).round().astype(np.uint8)
+
+        # Grayscale
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         image = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
         image = 255 - image
