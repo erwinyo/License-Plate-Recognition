@@ -1,18 +1,24 @@
 from collections import deque
 
 import cv2
-from dotenv import load_dotenv
 
 from ocr import OCR
 from yolo_detector import YoloDetector
-
-load_dotenv()  # Load environment variable
+from nafnet import NAFNet
 
 
 def main():
-    yolo_car = YoloDetector("asset/model/yolo/yolov8l.pt")
-    yolo_lpr = YoloDetector("asset/model/lpr/lpr_fast.pt")
+    yolo_car = YoloDetector("asset/model/yolo/yolov8l.onnx")
+    yolo_lpr = YoloDetector("asset/model/lpr/lpr_fast.onnx")
     ocr = OCR()
+    nafnet = NAFNet()
+
+    # Set up the NAFNet
+    opt_path = 'nafnet/options/test/REDS/NAFNet-width64.yml'
+    opt = nafnet.parse(opt_path)
+    opt['dist'] = False
+    model = nafnet.create_model(opt)
+    nafnet.set_model(model=model)
 
     cap = cv2.VideoCapture("asset/video/sample.mp4")
 
@@ -61,13 +67,19 @@ def main():
                     lp_h, lp_w = lp.shape[:2]
                     frame[y1_car:y1_car + lp_h, x1_car:x1_car + lp_w] = lp  # showing the license plate
 
-                    OCR
+                    # Deblur
+                    deblur = nafnet.run(lp)
+                    shifty1 = y1_car + lp_h
+                    frame[shifty1:shifty1 + lp_h, x1_car:x1_car + lp_w] = deblur
+
+                    # OCR
                     text, score = ocr.get_text(lp)
                     if text is not None and score is not None:
                         result[id_car]["text"].append(text)
                         result[id_car]["score"].append(score)
                         break
 
+        # Filter the best prediction from deque
         for x1_car, y1_car, x2_car, y2_car, id_car in cars:
             t = result[id_car]["text"]
             s = result[id_car]["score"]

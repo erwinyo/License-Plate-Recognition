@@ -2,10 +2,7 @@ import string
 
 import cv2
 import easyocr
-import numpy as np
 import torch
-
-import RRDBNet_arch as arch
 
 # Device agnostic
 device = "cuda" if torch.cuda.is_available() else "cpu"
