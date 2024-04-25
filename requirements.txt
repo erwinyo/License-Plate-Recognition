@@ -1,7 +1,9 @@
+ultralytics
+easyocr
 addict
 future
 lmdb
-numpy
+numpy==1.23.5
 opencv-python
 Pillow
 pyyaml

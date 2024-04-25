@@ -8,6 +8,7 @@ from nafnet import NAFNet
 
 
 def main():
+    # Setup all the models
     yolo_car = YoloDetector("asset/model/yolo/yolov8l.onnx")
     yolo_lpr = YoloDetector("asset/model/lpr/lpr_fast.onnx")
     ocr = OCR()
@@ -21,14 +22,23 @@ def main():
     nafnet.set_model(model=model)
 
     cap = cv2.VideoCapture("asset/video/sample.mp4")
-
     result = {}
+    """
+        variable "result", basically will have structure like this
+        result = {
+            1: {
+                "text": deque(maxlen=20),
+                "score": deque(maxlen=20)
+            },
+            ...
+        }
+    """
+
     while True:
         has_frame, frame = cap.read()
         if not has_frame:
             break
-        # Resize
-        frame = cv2.resize(frame, (0, 0), fx=0.90, fy=0.90)  # 90% height x 90% width
+        frame = cv2.resize(frame, (0, 0), fx=0.90, fy=0.90)  # Resize 90% height x 90% width
 
         # Car Detection
         result_car = yolo_car.track(frame, classes=[2, 3, 5, 7])  # This is the index class come with YOLOv8
@@ -63,6 +73,7 @@ def main():
             # Looping through cars, check whether the license plate bounding box inside of that car
             for x1_car, y1_car, x2_car, y2_car, id_car in cars:
                 if x1 > x1_car and y1 > y1_car and x2 < x2_car and y2 < y2_car:
+                    # Cropped the license plate only
                     lp = frame[y1:y2, x1:x2]
                     lp_h, lp_w = lp.shape[:2]
                     frame[y1_car:y1_car + lp_h, x1_car:x1_car + lp_w] = lp  # showing the license plate
@@ -70,7 +81,7 @@ def main():
                     # Deblur
                     deblur = nafnet.run(lp)
                     shifty1 = y1_car + lp_h
-                    frame[shifty1:shifty1 + lp_h, x1_car:x1_car + lp_w] = deblur
+                    frame[shifty1:shifty1 + lp_h, x1_car:x1_car + lp_w] = deblur  # Showing the deblur license plate
 
                     # OCR
                     text, score = ocr.get_text(lp)
@@ -87,13 +98,11 @@ def main():
                 max_score_index = s.index(max(s))
                 text = t[max_score_index]
 
-                cv2.putText(frame, text, (x1_car, y1_car), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255),
-                            1)  # Showing license plate text
+                cv2.putText(frame, text, (x1_car, y1_car), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255),1)  # Showing license plate text
 
         cv2.imshow('webcam', frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):  # press q to quit
             break
-
     cap.release()
     cv2.destroyAllWindows()
 

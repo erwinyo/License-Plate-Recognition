@@ -1,4 +1,9 @@
+*.h5
 *.pt
 *.pth
+*.pkl
 *.onnx
 *.engine
+
+/env
+/nafnet/.eggs

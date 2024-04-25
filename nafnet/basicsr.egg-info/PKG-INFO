@@ -7,6 +7,7 @@ Author: Xintao Wang
 Author-email: xintao.wang@outlook.com
 License: Apache License 2.0
 Keywords: computer vision,restoration,super resolution
+Platform: UNKNOWN
 Classifier: Development Status :: 4 - Beta
 Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Operating System :: OS Independent
@@ -14,3 +15,6 @@ Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.7
 Classifier: Programming Language :: Python :: 3.8
 License-File: LICENSE
+
+UNKNOWN
+
