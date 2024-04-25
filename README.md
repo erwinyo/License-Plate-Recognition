@@ -1,7 +1,7 @@
 # License Plate Recognition (LPR)
 This project automates vehicle number monitoring to empower law enforcement and security personnel. It helps enforce traffic regulations, deter unauthorized access, and ultimately improve road safety by providing a powerful tool for identifying and tracking vehicles of interest.
 
-[![Watch the video](https://img.youtube.com/vi/x91MPoITQ3I/hqdefault.jpg)](https://www.youtube.com/watch?v=x91MPoITQ3I)
+[![Watch the video](https://img.youtube.com/vi/Oe44oE1FR5Y/hqdefault.jpg)](https://www.youtube.com/watch?v=Oe44oE1FR5Y)
 
 ## IMPORTANT NOTE
 The requirements:
