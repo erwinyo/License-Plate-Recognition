@@ -21,7 +21,7 @@ def main():
     model = nafnet.create_model(opt)
     nafnet.set_model(model=model)
 
-    cap = cv2.VideoCapture("asset/video/sample.mp4")
+    cap = cv2.VideoCapture("asset/video/sample#1.mp4")
     result = {}
     """
         variable "result", basically will have structure like this
