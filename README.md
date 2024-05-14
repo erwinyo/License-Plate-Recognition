@@ -1,7 +1,10 @@
 # License Plate Recognition (LPR)
 This project automates vehicle number monitoring to empower law enforcement and security personnel. It helps enforce traffic regulations, deter unauthorized access, and ultimately improve road safety by providing a powerful tool for identifying and tracking vehicles of interest.
 
-[![Watch the video](https://img.youtube.com/vi/Oe44oE1FR5Y/hqdefault.jpg)](https://www.youtube.com/watch?v=Oe44oE1FR5Y)
+# Demo video
+You can click this thumbnail for see the demo video
+
+![Alt Text](demo.gif)
 
 ## IMPORTANT NOTE
 The requirements:
@@ -9,12 +12,13 @@ The requirements:
 
 ## Getting started
 #### Setup environment
+##### **(THIS IS A MUST ON FIRST STEP)**
 ```bash
 ./setup-environemnt.sh
 ```
 The above command will set up a virtual environment.
 
-**NOTE** : You have to activate the environment manually using command ***"source env/bin/activate"***
+**NOTE** : You have to activate the environment manually using command ***"source env/bin/activate"*** (linux/macOS) and ***"env\Scripts\activate.bat"*** (Windows)
 
 #### Setup package
 ```bash

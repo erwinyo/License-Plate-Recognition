@@ -50,38 +50,58 @@ class OCR:
             Returns:
                 bool: True if the license plate complies with the format, False otherwise.
         """
+        length = len(text)
+        if length != 6 and length != 5:
+            return False, None
 
-        if len(text) != 7:
-            return False
+        if length == 6:
+            letter1 = text[0] in integer_string or text[0] in dict_char_to_int.keys()
+            letter2 = text[1] in integer_string or text[1] in dict_char_to_int.keys()
+            letter3 = text[2] in integer_string or text[2] in dict_char_to_int.keys()
+            letter4 = text[3] in integer_string or text[3] in dict_char_to_int.keys()
+            letter5 = text[4] in integer_string or text[4] in dict_char_to_int.keys()
+            letter6 = text[5] in integer_string or text[5] in dict_char_to_int.keys()
 
-        letter1 = text[0] in string.ascii_uppercase or text[0] in dict_int_to_char.keys()
-        letter2 = text[1] in string.ascii_uppercase or text[1] in dict_int_to_char.keys()
-        letter3 = text[2] in integer_string or text[2] in dict_char_to_int.keys()
-        letter4 = text[3] in integer_string or text[3] in dict_char_to_int.keys()
-        letter5 = text[4] in string.ascii_uppercase or text[4] in dict_int_to_char.keys()
-        letter6 = text[5] in string.ascii_uppercase or text[5] in dict_int_to_char.keys()
-        letter7 = text[6] in string.ascii_uppercase or text[6] in dict_int_to_char.keys()
+            if letter1 and letter2 and letter3 and letter4 and letter5 and letter6:
+                return True, length
 
-        if letter1 and letter2 and letter3 and letter4 and letter5 and letter6 and letter7:
-            return True
-        else:
-            return False
+        elif length == 5:
+            letter1 = text[0] in integer_string or text[0] in dict_char_to_int.keys()
+            letter2 = text[1] in integer_string or text[1] in dict_char_to_int.keys()
+            letter3 = text[2] in integer_string or text[2] in dict_char_to_int.keys()
+            letter4 = text[3] in integer_string or text[3] in dict_char_to_int.keys()
+            letter5 = text[4] in integer_string or text[4] in dict_char_to_int.keys()
+
+            if letter1 and letter2 and letter3 and letter4 and letter5:
+                return True, length
+
+        return False, None
+
 
     @staticmethod
-    def format_license_text(text):
+    def format_license_text(text, length_of_text):
         license_plate_ = ''
+        mapping = {}
 
-        mapping = {
-            0: dict_int_to_char,
-            1: dict_int_to_char,
-            2: dict_char_to_int,
-            3: dict_char_to_int,
-            4: dict_int_to_char,
-            5: dict_int_to_char,
-            6: dict_int_to_char
-        }
+        if length_of_text == 6:
+            mapping = {
+                0: dict_char_to_int,
+                1: dict_char_to_int,
+                2: dict_char_to_int,
+                3: dict_char_to_int,
+                4: dict_char_to_int,
+                5: dict_char_to_int
+            }
+        elif length_of_text == 5:
+            mapping = {
+                0: dict_char_to_int,
+                1: dict_char_to_int,
+                2: dict_char_to_int,
+                3: dict_char_to_int,
+                4: dict_char_to_int
+            }
 
-        for j in [0, 1, 2, 3, 4, 5, 6]:
+        for j in range(length_of_text):
             if text[j] in mapping[j].keys():
                 license_plate_ += mapping[j][text[j]]
             else:
@@ -91,12 +111,13 @@ class OCR:
 
     def get_text(self, image):
         image = self.preprocess(image)
-        detections = self.reader.readtext(image)
+        detections = self.reader.readtext(image, rotation_info=[90, 270], low_text=0.6, link_threshold=0.5)
         for detection in detections:
             bbox, text, score = detection
             text = text.upper().replace(' ', '')
 
-            if self.license_complies_format(text):
-                return self.format_license_text(text), score
+            valid, length = self.license_complies_format(text)
+            if valid:
+                return self.format_license_text(text, length), score
 
         return None, None

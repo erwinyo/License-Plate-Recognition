@@ -9,8 +9,8 @@ from nafnet import NAFNet
 
 def main():
     # Setup all the models
-    yolo_car = YoloDetector("asset/model/yolo/yolov8l.onnx")
-    yolo_lpr = YoloDetector("asset/model/lpr/lpr_fast.onnx")
+    yolo_car = YoloDetector("asset/model/yolo/yolov8l.pt")
+    yolo_lpr = YoloDetector("asset/model/lpr/lpr_fast.pt")
     ocr = OCR()
     nafnet = NAFNet()
 
@@ -21,7 +21,7 @@ def main():
     model = nafnet.create_model(opt)
     nafnet.set_model(model=model)
 
-    cap = cv2.VideoCapture("asset/video/sample#1.mp4")
+    cap = cv2.VideoCapture("asset/video/sample#3.mp4")
     result = {}
     """
         variable "result", basically will have structure like this
@@ -37,6 +37,7 @@ def main():
     while True:
         has_frame, frame = cap.read()
         if not has_frame:
+            print("No frame")
             break
         frame = cv2.resize(frame, (0, 0), fx=0.90, fy=0.90)  # Resize 90% height x 90% width
 
@@ -84,7 +85,7 @@ def main():
                     frame[shifty1:shifty1 + lp_h, x1_car:x1_car + lp_w] = deblur  # Showing the deblur license plate
 
                     # OCR
-                    text, score = ocr.get_text(lp)
+                    text, score = ocr.get_text(deblur)
                     if text is not None and score is not None:
                         result[id_car]["text"].append(text)
                         result[id_car]["score"].append(score)
@@ -98,7 +99,7 @@ def main():
                 max_score_index = s.index(max(s))
                 text = t[max_score_index]
 
-                cv2.putText(frame, text, (x1_car, y1_car), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255),1)  # Showing license plate text
+                cv2.putText(frame, text, (x2_car - len(text) * 10, y2_car), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0),2)  # Showing license plate text
 
         cv2.imshow('webcam', frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):  # press q to quit
