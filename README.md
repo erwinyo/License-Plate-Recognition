@@ -37,7 +37,7 @@ python main.py
 ```
 
 ## Feedback or Support
-If you have any feedback or need support, please reach out to us at work.erwinwingyonata@gmail.com
+If you have any feedback or need support, please reach out to us at **work.erwinwingyonata@gmail.com**
 
 ## Acknowledgements
 I'm grateful for this cool library to help make this project a success
