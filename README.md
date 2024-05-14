@@ -2,7 +2,6 @@
 This project automates vehicle number monitoring to empower law enforcement and security personnel. It helps enforce traffic regulations, deter unauthorized access, and ultimately improve road safety by providing a powerful tool for identifying and tracking vehicles of interest.
 
 # Demo video
-You can click this thumbnail for see the demo video
 
 ![Alt Text](demo.gif)
 
