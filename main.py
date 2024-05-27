@@ -43,6 +43,9 @@ def main():
 
         # Car Detection
         result_car = yolo_car.track(frame, classes=[2, 3, 5, 7])  # This is the index class come with YOLOv8
+        if result_car.boxes.id is None:
+            continue
+        
         ids_car = [int(i) for i in result_car.boxes.id.tolist()]
 
         # Remove old element from dictionary for old car id
